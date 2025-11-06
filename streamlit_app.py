@@ -16,9 +16,9 @@ else:
     # Configure the Gemini API client
     genai.configure(api_key=google_api_key)
 
-    # Let the user upload a file via `st.file_uploader`.
+    # Let the user upload a PDF file via `st.file_uploader`.
     uploaded_file = st.file_uploader(
-        "Upload a document (.txt or .md)", type=("txt", "md")
+        "Upload a document (.pdf)", type=("pdf",)
     )
 
     # Ask the user for a question via `st.text_area`.
@@ -29,8 +29,13 @@ else:
     )
 
     if uploaded_file and question:
-        # Process the uploaded file and question.
-        document = uploaded_file.read().decode()
+        # Process the uploaded PDF file and question.
+        import PyPDF2
+        pdf_reader = PyPDF2.PdfReader(uploaded_file)
+        document = ""
+        for page in pdf_reader.pages:
+            document += page.extract_text() or ""  # Some pages might return None
+
         prompt = f"Here's a document:\n{document}\n\n---\n\n{question}"
 
         # Use Gemini 2.5 Flash model ("gemini-2.5-flash")
