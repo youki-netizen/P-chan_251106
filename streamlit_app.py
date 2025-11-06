@@ -33,8 +33,8 @@ else:
         document = uploaded_file.read().decode()
         prompt = f"Here's a document:\n{document}\n\n---\n\n{question}"
 
-        # Create a Gemini model and get response
-        model = genai.GenerativeModel("gemini-pro")
+        # Use Gemini 2.5 Flash model ("gemini-2.5-flash")
+        model = genai.GenerativeModel("gemini-2.5-flash")
         response = model.generate_content(prompt, stream=True)
 
         # Stream the response to the app using `st.write_stream`.
